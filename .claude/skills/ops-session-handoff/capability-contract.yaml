@@ -1,0 +1,30 @@
+schema-version: 1
+skill:
+  name: ops-session-handoff
+  version: "0.15.0"
+capabilities:
+  - id: durable-document-store
+    tier: optional
+    purpose: Read and rewrite the two persistent per-track documents (PROGRESS, HISTORY) in place across sessions
+    degradation: Agent outputs the full updated text of each document for the human to paste; never claims to have saved anything it didn't
+  - id: versioned-checkpoints
+    tier: optional
+    purpose: Atomic change log with revert (e.g. git) so document overwrites stay reversible
+    degradation: Overwriting PROGRESS drops from full autonomy to proposal-first; the commit-convention section is skipped
+    install_hint: git or a platform-native document version history
+  - id: change-detection
+    tier: optional
+    purpose: List what changed this session (status/diff), read-only, to seed the reconcile
+    degradation: Infer changes from the conversation and the documents' Updated dates; ask the human to confirm the change set
+  - id: script-execution
+    tier: optional
+    purpose: Run deterministic audits plus host-state sync adapters for transcripts and generated memory
+    degradation: Agent performs the scans manually and flags them as non-deterministic; host-state sync adapters do not run, so the missing archives are reported
+  - id: byproduct-store
+    tier: optional
+    purpose: Sweep ephemeral outputs and hold private, gitignored host-state mirrors with explicit lifecycles; generated memory may contain cross-workspace context
+    degradation: Skip the byproduct sweep and generated-memory mirror; warn if tool outputs accumulate or generated recall will not travel
+  - id: transcript-archive
+    tier: optional
+    purpose: Idempotent copy of Claude Code raw session transcripts into a durable workspace store, with a normalized reader, optional read-only completeness reconciliation, and explicit-metadata-only lineage whose unknowns stay unclassified and queued (scripts/sync_sessions.py + scripts/transcript.py), so chat-approved decisions stay recoverable
+    degradation: Skip the sync when no adapter matches the host or script execution is unavailable; the persist-at-approval discipline (write approved decisions to disk at approval time) becomes the only safeguard

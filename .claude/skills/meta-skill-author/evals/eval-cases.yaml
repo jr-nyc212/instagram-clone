@@ -1,0 +1,181 @@
+# Structured eval-set — meta-skill-author (MV46 S2 rollout; schema:
+# ../../meta-skill-eval/references/eval-cases-schema.md).
+# Trigger cases migrated from the retired trigger-eval.md (prose set in git
+# history). Execution cases land at the S2/S3 enrichment pass.
+# Corpus keys wired below (sync-mode coverage): b90622f4, 01a9110a, 597cada6
+skill: meta-skill-author
+version: 2
+updated: 2026-07-20
+class: objective
+corpus_waivers: []
+cases:
+  # ---- trigger: should fire ----
+  - id: t01
+    tier: trigger
+    query: "Write a skill that formats SQL files on save"
+    should_trigger: true
+    source: "trigger-eval.md #1"
+    note: "canonical authoring ask"
+  - id: t02
+    tier: trigger
+    query: "Author a SKILL.md for our deploy-checklist workflow"
+    should_trigger: true
+    source: "trigger-eval.md #2"
+    note: "names the artifact"
+  - id: t03
+    tier: trigger
+    query: "Audit this skill — is the description going to trigger reliably?"
+    should_trigger: true
+    source: "trigger-eval.md #3"
+    note: "Eval mode"
+  - id: t04
+    tier: trigger
+    query: "Port the changelog-writer skill to Cursor"
+    should_trigger: true
+    source: "trigger-eval.md #4"
+    note: "Port mode, stage 2"
+  - id: t05
+    tier: trigger
+    query: "Make this skill generic so it works outside our repo"
+    should_trigger: true
+    source: "trigger-eval.md #5"
+    note: "Port mode, stage 1"
+  - id: t06
+    tier: trigger
+    query: "The summarizer skill never activates when I ask casually — optimize its description"
+    should_trigger: true
+    source: "trigger-eval.md #6"
+    note: "undertriggering complaint → §2.1 loop"
+  - id: t07
+    tier: trigger
+    query: "Evaluate this skill package against the four disciplines"
+    should_trigger: true
+    source: "trigger-eval.md #7"
+    note: "rubric vocabulary"
+  - id: t08
+    tier: trigger
+    query: "Create a new skill for triaging support tickets, spec first"
+    should_trigger: true
+    source: "trigger-eval.md #8"
+    note: "Design mode, spec-first"
+  - id: t09
+    tier: trigger
+    query: "Improve the report-builder skill — it keeps skipping its validation step"
+    should_trigger: true
+    source: "trigger-eval.md #9"
+    note: "Improve mode"
+  - id: t10
+    tier: trigger
+    query: "Package this skill so another team can install it"
+    should_trigger: true
+    source: "trigger-eval.md #10"
+    note: "§6 distribution"
+  # ---- trigger: should NOT fire (near-misses) ----
+  - id: t11
+    tier: trigger
+    query: "Improve my writing skills"
+    should_trigger: false
+    source: "trigger-eval.md #11"
+    note: "human skills, keyword-only overlap"
+  - id: t12
+    tier: trigger
+    query: "Which skills should I put on my resume?"
+    should_trigger: false
+    source: "trigger-eval.md #12"
+    note: "resume domain; routes to a resume skill where installed"
+  - id: t13
+    tier: trigger
+    query: "Make this email sound like me"
+    should_trigger: false
+    expect_instead: profile-voice
+    source: "trigger-eval.md #13"
+    note: "routes to profile-voice where installed"
+  - id: t14
+    tier: trigger
+    query: "Create a PRD for the plugin marketplace"
+    should_trigger: false
+    expect_instead: ops-vision-to-plan
+    source: "trigger-eval.md #14"
+    note: "routes to ops-vision-to-plan where installed"
+  - id: t15
+    tier: trigger
+    query: "Why is the linter failing on this file?"
+    should_trigger: false
+    source: "trigger-eval.md #15"
+    note: "ordinary debugging"
+  - id: t16
+    tier: trigger
+    query: "Add a keyboard-shortcuts cheat sheet to the docs"
+    should_trigger: false
+    source: "trigger-eval.md #16"
+    note: "docs authoring"
+  - id: t17
+    tier: trigger
+    query: "Install the spreadsheet skill from the marketplace"
+    should_trigger: false
+    source: "trigger-eval.md #17"
+    note: "consumption/install, not authoring"
+  - id: t18
+    tier: trigger
+    query: "Do a handoff and note the skill work for next session"
+    should_trigger: false
+    expect_instead: ops-session-handoff
+    source: "trigger-eval.md #18"
+    note: "routes to ops-session-handoff where installed"
+  - id: t19
+    tier: trigger
+    query: "What model are you running?"
+    should_trigger: false
+    source: "trigger-eval.md #19"
+    note: "trivia"
+  - id: t20
+    tier: trigger
+    query: "Skill issue lol — anyway, fix this null-pointer bug"
+    should_trigger: false
+    source: "trigger-eval.md #20"
+    note: "slang keyword, bug fix"
+  # ---- corpus-sourced (real phrasings, seeding sweep 2026-07-20) ----
+  - id: c01
+    tier: trigger
+    query: "I recall that at some point we may have changed the standards for our skills to only allow a hundred lines or something low like that — can you check on the situation for me? Please don't take any actual action, though"
+    should_trigger: false
+    source: "corpus b90622f4"
+    note: read-only status check with an explicit no-action constraint — answered inline without entering Improve mode
+  - id: c02
+    tier: trigger
+    query: "did you use the skill-authoring skill for this? Id like to go through the skill properly"
+    should_trigger: true
+    source: "corpus 01a9110a"
+    note: process-audit question as retroactive trigger — the discipline gets applied after the fact (L-35)
+  - id: c03
+    tier: trigger
+    query: "just to check, were going to capture what good and bad looks like in our evals right? Weve been focusing a lot on trigger evals, but thats such a narrow subset"
+    should_trigger: true
+    source: "corpus 597cada6"
+    note: eval-method coverage question — authoring method (this skill's eval section) owns both-directions doctrine
+  # ---- execution ----
+  - id: x01
+    tier: execution
+    mode: design
+    given: A new skill idea with a name and rough purpose
+    when: Asked to create it
+    query: "Write a new skill called inbox-triage that sorts incoming requests by urgency"
+    checks:
+      - {check: skill_loaded, skill: meta-skill-author}
+      - {check: response_contains, pattern: "(?i)spec|design|scope"}
+      - {check: response_not_contains, pattern: "(?i)published|deployed"}
+    source: "synthetic"
+    note: spec-first gate — design questions precede any SKILL.md drafting
+  # ---- corpus-sourced (live capture, 2026-07-20) ----
+  - id: c04
+    tier: trigger
+    query: "Id like to rename the data-pull skill to ops-data-pull. Im viewing it as being part of the ops-* class of skills"
+    should_trigger: false
+    source: "corpus cb906f66"
+    note: recurring rename shape (2nd occurrence; fictionalized skill name) — mechanical rename with full reference sweep + derived-surface regen executes inline; below the authoring-mode threshold, but the reference-sweep discipline still applies
+  - id: c05
+    tier: trigger
+    query: "progress. Btw, when it comes to creating the skill evals, bias as much as possible towards deterministic tests — I recall how surprisingly far regex-based evals took the DeepMind folks"
+    should_trigger: true
+    source: "corpus 3246b477"
+    note: wake-up + method-doctrine rider citing an external anecdote — the rider amends this skill's eval-method doctrine (deterministic-first bias) before the named unit proceeds

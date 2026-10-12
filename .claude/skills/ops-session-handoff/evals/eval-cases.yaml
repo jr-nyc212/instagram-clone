@@ -1,0 +1,305 @@
+# Structured eval-set — ops-session-handoff (MV46 S2 rollout; schema:
+# ../../meta-skill-eval/references/eval-cases-schema.md).
+# Trigger cases migrated from the retired trigger-eval.md (prose set in git
+# history). Execution cases land at the S2/S3 enrichment pass.
+# Corpus keys wired below (sync-mode coverage): 0991d74f, 1c26a73c, 37344981, b90622f4, 237ede25, 5f64bf02, a19e8529, 75ae4ba7, fe5e0dbf, e2e3b2f4, 19ab29f6, 09d7069b, 66363a68, 01a9110a, 12142666, 597cada6, cb906f66, f9175d73
+skill: ops-session-handoff
+version: 4
+updated: 2026-07-22
+class: objective
+corpus_waivers: ["12142666"]  # bare "progress" wake-up with REVIEW DUE — harness idiom
+                              # + P-29 batch precedence, not a handoff phrasing
+cases:
+  # ---- trigger: should fire ----
+  - id: t01
+    tier: trigger
+    query: "Ok, let's do a handoff"
+    should_trigger: true
+    source: "trigger-eval.md #1"
+    note: "canonical casual invocation"
+  - id: t02
+    tier: trigger
+    query: "Let's wrap up this session and hand off to a fresh one"
+    should_trigger: true
+    source: "trigger-eval.md #2"
+    note: "synonym phrasing"
+  - id: t03
+    tier: trigger
+    query: "I'm about to hit the context limit — checkpoint everything so a new session can pick up"
+    should_trigger: true
+    source: "trigger-eval.md #3"
+    note: "session-split motive"
+  - id: t04
+    tier: trigger
+    query: "Update system/PROGRESS.md so tomorrow's session knows where we left off"
+    should_trigger: true
+    source: "trigger-eval.md #4"
+    note: "names the control artifact + bridge intent"
+  - id: t05
+    tier: trigger
+    query: "We just shipped the invoice-export milestone — reconcile progress and history before we stop"
+    should_trigger: true
+    source: "trigger-eval.md #5"
+    note: "post-milestone reconciliation, embedded ask"
+  - id: t06
+    tier: trigger
+    query: "End of day for me. Make sure the next session can cold-start without any of this context"
+    should_trigger: true
+    source: "trigger-eval.md #6"
+    note: "names the deliverable, not the action"
+  - id: t07
+    tier: trigger
+    query: "Do a handoff; next session I want to tackle the search-index rewrite"
+    should_trigger: true
+    source: "trigger-eval.md #7"
+    note: "handoff + next-session intent — recurring real shape: the stated goal routes into the next-unit-of-work"
+  - id: t08
+    tier: trigger
+    query: "Session's getting long — split it here and bridge the state"
+    should_trigger: true
+    source: "trigger-eval.md #8"
+    note: "terse"
+  - id: t09
+    tier: trigger
+    query: "Reconcile the progress file — we finished two scopes today"
+    should_trigger: true
+    source: "trigger-eval.md #9"
+    note: "reconcile vocabulary"
+  - id: t10
+    tier: trigger
+    query: "Hand this off — capture the open blockers so nothing gets lost"
+    should_trigger: true
+    source: "trigger-eval.md #10"
+    note: "blocker-capture angle"
+  - id: t11
+    tier: trigger
+    query: "Nice work, but let's pause here and do a handoff — I want to review how the pipeline behaved this session"
+    should_trigger: true
+    source: "trigger-eval.md #11"
+    note: "pause vocabulary + diagnostic motive (real shape: handoff invoked partly to inspect the process itself)"
+  - id: t12
+    tier: trigger
+    query: "Let's do the handoff and then push"
+    should_trigger: true
+    source: "trigger-eval.md #12"
+    note: "multi-intent: reconcile + git push in one utterance — handoff fires; the push remains its own gate"
+  - id: t13
+    tier: trigger
+    query: "Bring in that CSV-import helper as a proper skill — but let's do it in a fresh session please"
+    should_trigger: true
+    source: "trigger-eval.md #13"
+    note: "no handoff word — \"in a fresh session\" carries the bridge intent (recurring real shape)"
+  - id: t14
+    tier: trigger
+    query: "Let's do a handoff — heads up, another agent was working in a separate thread, so some state may already be reconciled"
+    should_trigger: true
+    source: "trigger-eval.md #14"
+    note: "parallel-thread awareness (recurring real shape): re-derive state from disk, fold only this thread's deltas"
+  # ---- trigger: should NOT fire (near-misses) ----
+  - id: t15
+    tier: trigger
+    query: "system/PROGRESS.md\" (bare control-file name, file open in editor)"
+    should_trigger: false
+    source: "trigger-eval.md #11"
+    note: "harness-level wake-up idiom — the main agent reads the file and proceeds or surfaces ambiguity; not reconciliation"
+  - id: t16
+    tier: trigger
+    query: "What's left on the current milestone?"
+    should_trigger: false
+    source: "trigger-eval.md #12"
+    note: "status question"
+  - id: t17
+    tier: trigger
+    query: "Are the docs in sync with the changes we made?"
+    should_trigger: false
+    source: "trigger-eval.md #13"
+    note: "routes to a doc-sync skill where installed"
+  - id: t18
+    tier: trigger
+    query: "Run a retro on this session — what did we learn?"
+    should_trigger: false
+    source: "trigger-eval.md #14"
+    note: "routes to a self-improvement/retro skill where installed"
+  - id: t19
+    tier: trigger
+    query: "Commit what we have so far"
+    should_trigger: false
+    source: "trigger-eval.md #15"
+    note: "plain git commit, no session reconciliation"
+  - id: t20
+    tier: trigger
+    query: "Create a PRD for the new reporting feature"
+    should_trigger: false
+    expect_instead: ops-vision-to-plan
+    source: "trigger-eval.md #16"
+    note: "routes to ops-vision-to-plan where installed"
+  - id: t21
+    tier: trigger
+    query: "What should I work on next?"
+    should_trigger: false
+    source: "trigger-eval.md #17"
+    note: "next-action question, not a bridge write"
+  - id: t22
+    tier: trigger
+    query: "Write a changelog entry for the library release"
+    should_trigger: false
+    source: "trigger-eval.md #18"
+    note: "product changelog, not the session HISTORY convention"
+  - id: t23
+    tier: trigger
+    query: "Delete the old session notes files"
+    should_trigger: false
+    source: "trigger-eval.md #19"
+    note: "file operation, not handoff"
+  - id: t24
+    tier: trigger
+    query: "Summarize this conversation for my standup"
+    should_trigger: false
+    source: "trigger-eval.md #20"
+    note: "summary for a human consumer, no state reconciliation"
+  - id: t25
+    tier: trigger
+    query: "Have we been keeping the progress and history files up to date?"
+    should_trigger: false
+    source: "trigger-eval.md #21"
+    note: "currency *question* about the control artifacts — an audit/status read, not a reconcile request (real near-miss shape); routes to a doc-sync skill where installed"
+  # ---- corpus-sourced (real phrasings, seeding sweep 2026-07-20; shape-clustered,
+  # multi-key sources cover every archive session exhibiting the shape) ----
+  - id: c01
+    tier: trigger
+    query: "lets do a handoff"
+    should_trigger: true
+    source: "corpus e2e3b2f4 0991d74f 597cada6"
+    note: bare canonical trigger — the most frequent real shape
+  - id: c02
+    tier: trigger
+    query: "ok good. Lets do a handoff. In the next session, I want to brainstorm and then design an improved version of one of our skills"
+    should_trigger: true
+    source: "corpus 1c26a73c 19ab29f6 09d7069b 66363a68"
+    note: handoff word + explicit next-session goal — the goal routes to the control surface's next unit, never invoked now
+  - id: c03
+    tier: trigger
+    query: "Yes, let's do a handoff. Just note that there was another agent doing work in a separate thread, so a handoff may have already happened — some stuff might be out of sync"
+    should_trigger: true
+    source: "corpus a19e8529 75ae4ba7"
+    note: parallel-thread awareness — correct behavior re-derives state from disk before reconciling, folds only this thread's deltas
+  - id: c04
+    tier: trigger
+    query: "Should we do a handoff, or is everything already in a place for me to start a fresh session?"
+    should_trigger: true
+    source: "corpus b90622f4"
+    note: question-form — assess reconciliation need rather than assuming
+  - id: c05
+    tier: trigger
+    query: "lets do a handoff. I want to see how things fire because this session showed a lot of struggles, especially at the start"
+    should_trigger: true
+    source: "corpus 37344981"
+    note: pause-plus-diagnostic motive, mid-session
+  - id: c06
+    tier: trigger
+    query: "yes, but lets do a handoff to continue in a fresh session"
+    should_trigger: true
+    source: "corpus 5f64bf02 237ede25"
+    note: approve-and-bridge — the yes simultaneously approves queuing the pending item as the next session's first unit
+  - id: c07
+    tier: trigger
+    query: "its been sent. lets do a handoff."
+    should_trigger: true
+    source: "corpus fe5e0dbf"
+    note: outcome-report + handoff in one utterance — the outcome itself becomes a reconcile line
+  - id: c08
+    tier: trigger
+    query: "That side project was a one-off, just something I needed real quick. Lets evacuate it from the workspace and even delete its session if possible. Lets do a handoff and declare the milestone"
+    should_trigger: true
+    source: "corpus 01a9110a"
+    note: compound evacuation directive + milestone declaration — deletion stays human-gated inside the run
+  - id: c09
+    tier: trigger
+    query: "should we lean out the PROGRESS.md files?"
+    should_trigger: true
+    source: "corpus b90622f4"
+    note: control-surface custody question — gated lean-out under this skill's conventions, recurring shape
+  # ---- execution ----
+  - id: x01
+    tier: execution
+    mode: reconcile
+    given: Both control surfaces exist with completed work not yet reflected
+    when: A handoff is requested
+    query: "lets do a handoff"
+    checks:
+      - {check: skill_loaded, skill: ops-session-handoff}
+      - {check: response_contains, pattern: "(?i)PROGRESS"}
+      - {check: response_contains, pattern: "(?i)next unit|reconcil"}
+    source: "corpus e2e3b2f4"
+    note: write denied in-harness — proposing the reconciliation content is the correct degraded outcome
+  - id: x02
+    tier: execution
+    mode: reconcile
+    given: The maintenance guard bans volatile counts in tracked docs
+    when: A handoff would tempt recording stats
+    query: "handoff please — and note how big the milestone was"
+    checks:
+      - {check: skill_loaded, skill: ops-session-handoff}
+      - {check: response_not_contains, pattern: "(?i)\\d+ (words|lines) (of|in) "}
+    source: "synthetic"
+    note: negative assertion — durable rules, never volatile metrics, in control surfaces
+  - id: x03
+    tier: execution
+    mode: reconcile
+    given: The host exposes both a raw transcript store and generated memory state
+    when: A handoff is requested on a host with both continuity adapters
+    query: "Wrap up this task and make sure its session and generated memories are preserved for later mining"
+    checks:
+      - {check: skill_loaded, skill: ops-session-handoff}
+      - {check: response_contains, pattern: "(?i)transcript|session-store"}
+      - {check: response_contains, pattern: "(?i)memory"}
+      - {check: response_contains, pattern: "(?i)one-way|copy-only|never.*write.*back|never.*rewrite"}
+      - {check: response_contains, pattern: "(?i)private|gitignored|cross-workspace"}
+    source: "synthetic"
+    note: continuity archives are copied one-way; generated host memory is never rewritten from the mirror
+  - id: x04
+    tier: execution
+    mode: reconcile
+    given: The host exposes explicit parent metadata for some archived tasks and no compatible relationship metadata for others
+    when: A handoff syncs the continuity archive
+    query: "Preserve the task lineage during this handoff, but only where the host proves a parent-child relationship. Do not guess how the remaining transcripts relate."
+    checks:
+      - {check: skill_loaded, skill: ops-session-handoff}
+      - {check: response_contains, pattern: "(?i)explicit.*metadata|metadata.*explicit"}
+      - {check: response_contains, pattern: "(?i)unclassified"}
+      - {check: response_contains, pattern: "(?i)normal.*queue|queued.*normally|review queue"}
+      - {check: response_contains, pattern: "(?i)never.*(infer|guess).*(timestamp|path)|(timestamp|path).*not.*(infer|guess)"}
+    source: "synthetic"
+    note: lineage is evidence-preserving metadata, never a timing/path heuristic or a reason to suppress uncertain transcripts
+  # ---- corpus-sourced (live capture, 2026-07-20) ----
+  - id: c17
+    tier: trigger
+    query: "perfect, nicely done! Lets do a handoff. Id like to focus the next session on documentation updates and such. Ask me for input when starting the fresh session and are ready to go"
+    should_trigger: true
+    source: "corpus cb906f66"
+    note: stated-next-session-goal + deferred-elicitation instruction — the recorded next unit itself mandates asking the operator at wake-up (explicit override of the bare-wake-up no-prompting default)
+  - id: c18
+    tier: trigger
+    query: "a review window is indeed open, but lets actually move this item to the private track and make a note that itll affect the system later on. After, lets do a handoff, and lets please really summarize the Roadmap"
+    should_trigger: true
+    source: "corpus f9175d73"
+    note: compound handoff — track-reassignment of an open scope (with a system write-back note) + roadmap-compaction rider per the milestone-collapse protocol
+  # ---- corpus-sourced (§2.1 fold, EVAL-READY dispatch 2026-07-20) ----
+  - id: c19
+    tier: trigger
+    query: "lets quickly update the handoff protocol so that, whenever we reach the 5th milestone or so, we collapse that set into a summary like we just did"
+    should_trigger: true
+    source: "corpus 1c26a73c"
+    note: standing-protocol amendment naming a threshold — the convention edit is gated and folds into this skill's conventions, not a reconcile run
+  - id: c20
+    tier: trigger
+    query: "Id like to pivot now and finally update the onboarding folder and the docs"
+    should_trigger: false
+    source: "corpus 12142666"
+    note: two-surface pivot naming folders, not skills — routes by surface ownership (onboarding canon and doc audit skills where installed); no bridge intent, no reconcile
+  - id: c21
+    tier: trigger
+    query: "progress. Actually, I want to focus on whether or not we even need these two backlog items: [quoted residual lines]"
+    should_trigger: true
+    source: "corpus f9175d73"
+    note: wake-up + backlog value-check rider — control-surface grooming under this skill's custody (sibling of the lean-out shape); keep/drop decisions gated

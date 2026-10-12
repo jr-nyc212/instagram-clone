@@ -1,0 +1,26 @@
+schema-version: 1
+skill:
+  name: meta-skill-author
+  version: "1.20.0"
+capabilities:
+  - id: human-approval-channel
+    tier: required
+    purpose: Present the spec (and later gates) for explicit human approval before generating
+    degradation: inert for interactive authoring - do not install without one; unattended runs require a pre-approved spec
+  - id: script-execution
+    tier: optional
+    purpose: Run the deterministic Level-1 validator and the trigger-accuracy eval harness
+    degradation: Manual field-constraint checks and heuristic description review, flagged as non-deterministic and unmeasured
+    install_hint: A bash-capable runtime for scripts/validate.sh; python for eval tooling
+  - id: fresh-context-scoring
+    tier: optional
+    purpose: Grade skills in a separate assessor context, never the author's
+    degradation: Self-review, flagged - convenience erosion of generator-assessor separation is the primary known failure mode
+  - id: versioned-checkpoints
+    tier: optional
+    purpose: Version and roll back capability definitions across edit cycles
+    degradation: Carry version + changelog inside the artifact; warn that rollback is manual
+  - id: reference-bundle-attachment
+    tier: optional
+    purpose: Attach the package's rubric, anti-pattern, platform-matrix, and field-spec references at invocation
+    degradation: Inline the condensed versions carried in the body; audits cite the summary, not the full rubric
