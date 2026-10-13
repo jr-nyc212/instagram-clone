@@ -1,5 +1,25 @@
 html, body {
     margin: 0;
     padding: 0;
+    font-family: "Source Sans 3", sans-serif;
+    width: 375px;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #c6c6c6;
+}
+
+.master-logo {
+    width: 127px;
+    height: auto;
+}
+
+.user-avatar {
+    width: 34px;
+    border-radius: 50%;
+}
