@@ -1,19 +1,39 @@
-# Getting Started
-Install the dependencies and run the project
+# Oldagram – Instagram-style feed of old-master painters
+
+A mobile-width Instagram clone where the posters are Van Gogh, Courbet and
+Ducreux. The starter is Scrimba's solo project from the Fullstack Developer
+Path; the brief is to build the feed from a design image with semantic HTML
+and flexbox, then render the posts from a JavaScript array. Each lesson gets
+its own issue, branch and pull request, so the commit history reads as a log
+of the changes.
+
+**Status:** in progress. The top bar and the first post's header are built;
+the icon row, likes, caption and JavaScript rendering are next.
+
+## What was built
+
+- **Head metadata.** Viewport tag, page title and Source Sans 3 from Google
+  Fonts, with preconnect hints so the font loads early.
+- **Top bar.** Logo and user avatar in a flex row with space between, a
+  bottom border and a fixed 375px page width to match the phone design.
+- **First post header.** Poster avatar, name and location above the post
+  image, with descriptive alt text on the images.
+
+## Run it locally
+
 ```
 npm install
-npm start
+npm run dev
 ```
 
-Head over to https://vitejs.dev/ to learn more about configuring vite
-## About Scrimba
+Vite serves the page at http://localhost:5173.
 
-At Scrimba our goal is to create the best possible coding school at the cost of a gym membership! 💜
-If we succeed with this, it will give anyone who wants to become a software developer a realistic shot at succeeding, regardless of where they live and the size of their wallets 🎉
-The Fullstack Developer Path aims to teach you everything you need to become a Junior Developer, or you could go further with one of our advanced courses 🚀
+## Built with
 
-- [Our courses](https://scrimba.com/courses)
-- [The Frontend Career Path](https://scrimba.com/fullstack-path-c0fullstack)
-- [Become a Scrimba Pro member](https://scrimba.com/pricing)
+HTML, CSS, JavaScript and Vite. No frameworks.
 
-Happy Coding!
+## Course
+
+Built while working through Scrimba's
+[Fullstack Developer Path](https://scrimba.com/fullstack-path-c0fullstack).
+The starter code and images are Scrimba's; the markup and styling are mine.
